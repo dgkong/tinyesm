@@ -1,5 +1,8 @@
-__pycache__
+.DS_Store
 data/ur50s/train_shards
 *.fasta
 *.gz
 *.txt
+checkpoints/
+
+__pycache__

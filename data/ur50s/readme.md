@@ -6,6 +6,8 @@
 
 After running 'prepare.sh':
 
-- train.fasta has 62,538,836 seqs
-    - sharded into 626 files ~100k seqs each
-- val.fasta has 4,329,087 seqs ≤256 aa
+- train.fasta has 68,792,632 seqs
+    - sharded into 344 files ~200k seqs each
+- val.fasta has 607,065 seqs <=510 aa residues (ESM-2 uses <cls> and <eos> tokens)
+
+Used 1% instead of 0.5% validation split used in ESM-2 and skipped the >50% identical filtering process used in ESM-2 due to compute constraints.
