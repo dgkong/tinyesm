@@ -9,7 +9,7 @@ from pos_embedding import LearnedPositionalEmbedding, RotaryPositionalEmbedding
 
 @dataclass
 class ESMConfig:
-    max_seq_len: int = 512                  # 510 residues w/o cls and eos tokens
+    max_seq_len: int = 256                  # 254 residues w/o cls and eos tokens
     vocab_size: int = 33                    # number of tokens
     pad_token_id: int = 1
     mask_token_id: int = 32

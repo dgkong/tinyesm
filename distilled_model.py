@@ -1,15 +1,15 @@
 from dataclasses import dataclass
 
+import esm
 import torch
 import torch.nn.functional as F
-from transformers import EsmForMaskedLM
 
 from model import ESM, ESMConfig
 
 
 @dataclass
 class DistilConfig(ESMConfig):
-    teacher_model_name: str = "facebook/esm2_t12_35M_UR50D"
+    teacher_model_name: str = "esm2_t12_35M_UR50D"
     temperature: float = 2.0           
     alpha: float = 0.7 # KL div on masked tokens              
 
@@ -19,7 +19,7 @@ class DistilESM(ESM):
         super().__init__(config)
         self.temp = config.temperature
         self.alpha = config.alpha
-        self.teacher = EsmForMaskedLM.from_pretrained(config.teacher_model_name)
+        self.teacher, _ = getattr(esm.pretrained, config.teacher_model_name)()
         self.teacher.eval()
         for p in self.teacher.parameters():
             p.requires_grad_(False)
@@ -30,9 +30,9 @@ class DistilESM(ESM):
         if self.training and targets is not None:
             # TRAINING
             with torch.no_grad():
-                teacher_output = self.teacher(input_ids=toks, attention_mask=mask)
-                teacher_logits = teacher_output.logits # (B,T,C)
-            
+                teacher_output = self.teacher(toks, repr_layers=[], return_contacts=False)
+                teacher_logits = teacher_output["logits"] # (B,T,C), float32
+
             # only masked tokens
             masked_tok_mask = (targets != -100)
             if masked_tok_mask.any():

@@ -9,9 +9,9 @@ from distilled_model import DistilConfig, DistilESM
 from model import ESM, ESMConfig
 
 # Configuration
-VAL_INTERVAL = 400
-VAL_STEPS = 100
-PATIENCE = 3
+VAL_INTERVAL = 500
+VAL_STEPS = 50
+PATIENCE = 5
 MIN_DELTA = 1e-4
 CHECKPOINT_PATH = "checkpoints"
 DISTILLATION = True
@@ -19,7 +19,7 @@ RESUME_TRAINING = False
 
 # Batching Configuration
 total_batch_size = 131072   # 2**17 number of tokens
-B, T = 16, 510              # micro batch size, max seq residues length
+B, T = 64, 254              # micro batch size, max seq residues length
 TOK_PER_BATCH = B * (T + 2) # T + 2 due to <cls> and <eos> tokens
 assert total_batch_size % TOK_PER_BATCH == 0, "total_batch_size must be divisible by tok_per_batch"
 grad_accum_steps = total_batch_size // TOK_PER_BATCH
@@ -57,7 +57,7 @@ if DISTILLATION:
 else:
     model = ESM(ESMConfig())
 model.to(device)
-model = torch.compile(model, backend="aot_eager")
+# model = torch.compile(model, backend="aot_eager")
 optimizer = model.configure_optimizers(weight_decay=0.01, learning_rate=4e-4)
 
 def get_lr(it):

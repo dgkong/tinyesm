@@ -2,7 +2,7 @@
 set -euo pipefail
 
 FASTA="uniref50.fasta"   # input FASTA
-RESIDUES=510             # max residue length
+RESIDUES=254             # max residue length
 VAL_FRAC=0.01            # 1% validation split
 SEED=42                  # RNG seed for reproducibility
 SHARD_SIZE=200_000       # Number of sequences per shard
